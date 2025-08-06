@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Excel Analytics Pro - Login</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Animated Background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+        animation: backgroundShift 20s ease-in-out infinite;
+        z-index: -1;
+      }
+
+      @keyframes backgroundShift {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+
+        50% {
+          transform: scale(1.1) rotate(180deg);
+        }
+      }
+
+      /* Floating particles */
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(16, 185, 129, 0.6);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .particle:nth-child(1) {
+        top: 20%;
+        left: 20%;
+        animation-delay: 0s;
+        background: rgba(16, 185, 129, 0.6);
+      }
+
+      .particle:nth-child(2) {
+        top: 80%;
+        left: 80%;
+        animation-delay: 2s;
+        background: rgba(59, 130, 246, 0.5);
+      }
+
+      .particle:nth-child(3) {
+        top: 40%;
+        left: 70%;
+        animation-delay: 4s;
+        background: rgba(139, 92, 246, 0.4);
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+          opacity: 0.6;
+        }
+
+        50% {
+          transform: translateY(-20px);
+          opacity: 1;
+        }
+      }
+
+      #container {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 40px 32px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.8s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .glass-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+        animation: shimmer 3s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          left: -100%;
+        }
+
+        100% {
+          left: 100%;
+        }
+      }
+
+      .logo-container {
+        text-align: center;
+        margin-bottom: 32px;
+        position: relative;
+      }
+
+      .logo {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border-radius: 20px;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 8px 24px rgba(16, 185, 129, 0.4),
+          0 0 0 4px rgba(16, 185, 129, 0.1);
+        animation: logoPulse 2s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .logo::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: logoRotate 4s linear infinite;
+      }
+
+      .logo::after {
+        content: "📊";
+        font-size: 36px;
+        position: relative;
+        z-index: 1;
+      }
+
+      @keyframes logoPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes logoRotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      h1 {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 8px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 16px;
+        font-weight: 400;
+        text-align: center;
+        margin-bottom: 32px;
+        line-height: 1.5;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .input-container {
+        position: relative;
+      }
+
+      .form-group input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px 20px;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 400;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: rgba(16, 185, 129, 0.5);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+
+      .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 400;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        font-size: 18px;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color 0.2s ease;
+      }
+
+      .password-toggle:hover {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .button {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 16px 32px;
+        margin: 24px 0 16px 0;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow:
+          0 4px 16px rgba(16, 185, 129, 0.3),
+          0 0 0 1px rgba(16, 185, 129, 0.1);
+      }
+
+      .button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+      }
+
+      .button:hover::before {
+        left: 100%;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 8px 32px rgba(16, 185, 129, 0.4),
+          0 0 0 1px rgba(16, 185, 129, 0.2);
+        background: linear-gradient(135deg, #059669, #047857);
+      }
+
+      .button:active {
+        transform: translateY(0);
+      }
+
+      .button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid #ffffff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-message {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 16px 0;
+        color: #fca5a5;
+        font-size: 14px;
+        line-height: 1.4;
+        animation: errorShake 0.5s ease-in-out;
+      }
+
+      @keyframes errorShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+
+        25% {
+          transform: translateX(-5px);
+        }
+
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      .success-message {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 16px 0;
+        color: #6ee7b7;
+        font-size: 14px;
+        line-height: 1.4;
+        animation: successFade 0.5s ease-in-out;
+      }
+
+      @keyframes successFade {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .forgot-password {
+        text-align: center;
+        margin-top: 16px;
+      }
+
+      .forgot-password a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .forgot-password a:hover {
+        color: #10b981;
+      }
+
+      footer {
+        margin-top: 32px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      .footer-highlight {
+        color: #10b981;
+        font-weight: 600;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* Mobile responsiveness */
+      @media (max-width: 480px) {
+        #container {
+          padding: 16px;
+        }
+
+        .glass-card {
+          padding: 32px 24px;
+          border-radius: 20px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .form-group input {
+          padding: 14px 16px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Floating particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div id="container">
+      <div class="glass-card">
+        <div class="logo-container">
+          <div class="logo"></div>
+          <h1>Excel Analytics Pro</h1>
+          <p class="subtitle">
+            Sign in to unlock powerful data insights and analytics for your Excel workflows
+          </p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username or email"
+              required
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-container">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+              />
+              <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
+            </div>
+          </div>
+
+          <div id="errorMessage" class="error-message hidden"></div>
+          <div id="successMessage" class="success-message hidden"></div>
+
+          <button type="submit" class="button" id="loginButton">
+            <span id="buttonText">Sign In</span>
+          </button>
+        </form>
+
+        <div class="forgot-password">
+          <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+        </div>
+
+        <footer>Powered by <span class="footer-highlight">Excel Analytics Pro</span></footer>
+      </div>
+    </div>
+
+    <script>
+      Office.onReady(() => {
+        console.log("Office.js is ready");
+        // checkExistingToken();
+      });
+      // Global variables
+      let isLoading = false;
+
+      // DOM elements
+      const loginForm = document.getElementById("loginForm");
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      const passwordToggle = document.getElementById("passwordToggle");
+      const loginButton = document.getElementById("loginButton");
+      const buttonText = document.getElementById("buttonText");
+      const errorMessage = document.getElementById("errorMessage");
+      const successMessage = document.getElementById("successMessage");
+
+      // Initialize event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeEventListeners();
+        checkExistingToken();
+      });
+
+      function initializeEventListeners() {
+        // Form submission
+        loginForm.addEventListener("submit", handleLogin);
+
+        // Password toggle
+        passwordToggle.addEventListener("click", togglePasswordVisibility);
+
+        // Input field focus effects
+        usernameInput.addEventListener("focus", clearMessages);
+        passwordInput.addEventListener("focus", clearMessages);
+
+        // Enter key handling
+        document.addEventListener("keypress", function (e) {
+          if (e.key === "Enter" && !isLoading) {
+            handleLogin(e);
+          }
+        });
+      }
+
+      function togglePasswordVisibility() {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        passwordToggle.textContent = type === "password" ? "👁️" : "🙈";
+      }
+
+      function clearMessages() {
+        errorMessage.classList.add("hidden");
+        successMessage.classList.add("hidden");
+      }
+
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove("hidden");
+        successMessage.classList.add("hidden");
+      }
+
+      function showSuccess(message) {
+        successMessage.textContent = message;
+        successMessage.classList.remove("hidden");
+        errorMessage.classList.add("hidden");
+      }
+
+      function setLoadingState(loading) {
+        isLoading = loading;
+        loginButton.disabled = loading;
+
+        if (loading) {
+          buttonText.innerHTML = '<div class="loading-spinner"></div>Signing In...';
+        } else {
+          buttonText.textContent = "Sign In";
+        }
+      }
+
+      async function handleLogin(e) {
+        e.preventDefault();
+
+        if (isLoading) return;
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        // Basic validation
+        if (!username || !password) {
+          showError("Please enter both username and password.");
+          return;
+        }
+
+        if (password.length < 6) {
+          showError("Password must be at least 6 characters long.");
+          return;
+        }
+
+        clearMessages();
+        setLoadingState(true);
+
+        try {
+          const response = await loginUser(username, password);
+          console.log(response, "response is here--------");
+          if (response.accessToken) {
+            // Store the token
+            await storeToken(response.accessToken);
+
+            showSuccess("Login successful! Redirecting...");
+
+            // Simulate redirect delay
+            setTimeout(() => {
+              // Replace with your actual redirect logic
+              console.log("Redirecting to dashboard...");
+              // window.location.href = '/dashboard';
+            }, 1500);
+          } else {
+            throw new Error(response.message || "Login failed. Please check your credentials.");
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          showError(error.message || "An error occurred during login. Please try again.");
+        } finally {
+          setLoadingState(false);
+        }
+      }
+
+      async function loginUser(username, password) {
+        // Replace this URL with your actual API endpoint
+        const API_ENDPOINT = "https://api.staging.accounting.bi/users-service/users/authenticate";
+
+        try {
+          const response = await fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              username: username,
+              password: password,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || `HTTP error! status: ${response.status}`);
+          }
+
+          return data;
+        } catch (error) {
+          // Handle network errors or API errors
+          if (error.name === "TypeError" && error.message.includes("fetch")) {
+            throw new Error(
+              "Unable to connect to the server. Please check your internet connection."
+            );
+          }
+          throw error;
+        }
+      }
+
+      async function storeToken(token) {
+        try {
+          // Store token in memory for this session
+          // OfficeRuntime.storage.setItem("token", token);
+          await OfficeRuntime.storage.setItem("authToken", token);
+          //   const token = await OfficeRuntime.storage.getItem("authToken");
+
+          //   console.log("Token stored successfully in OfficeRuntime.storage");
+          //   if (token) {
+          //     // ✅ Redirect to the sidebar UI
+          //     window.location.href = "sidebar.html";
+          //   }
+
+          window.location.href = "taskpane.html";
+          // If you need persistence across browser sessions, you would use:
+          // localStorage.setItem('authToken', token);
+          // Note: localStorage is not available in Claude.ai artifacts
+
+          console.log("Token stored successfully");
+
+          // You can also store additional user info if provided by the API
+          // window.userInfo = userInfo;
+        } catch (error) {
+          console.error("Error storing token:", error);
+          throw new Error("Failed to store authentication token.");
+        }
+      }
+
+      function getStoredToken() {
+        // Get token from memory
+        return window.authToken || null;
+
+        // If using localStorage (not available in Claude.ai):
+        // return localStorage.getItem('authToken');
+      }
+
+      function checkExistingToken() {
+        const token = getStoredToken();
+        if (token) {
+          console.log("Existing token found");
+          // You could validate the token here or redirect to dashboard
+          // validateToken(token);
+        }
+      }
+
+      function showForgotPassword() {
+        alert(
+          "Forgot password functionality would be implemented here.\n\nThis would typically:\n- Open a modal or redirect to a password reset page\n- Send a reset email to the user\n- Allow them to create a new password"
+        );
+      }
+
+      // Utility function to validate email format
+      function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      // Function to logout (clear token)
+      function logout() {
+        window.authToken = null;
+        // localStorage.removeItem('authToken'); // If using localStorage
+        console.log("User logged out");
+      }
+
+      // Example function to make authenticated API calls
+      async function makeAuthenticatedRequest(url, options = {}) {
+        const token = getStoredToken();
+
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          ...options.headers,
+        };
+
+        return fetch(url, {
+          ...options,
+          headers,
+        });
+      }
+
+      // Expose some functions globally for debugging/testing
+      window.loginUtils = {
+        logout,
+        getStoredToken,
+        makeAuthenticatedRequest,
+      };
+    </script>
+  </body>
+</html>

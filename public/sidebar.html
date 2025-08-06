@@ -1,0 +1,2483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounting BI Report Tools</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      /* Global styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Google Sans", "Roboto", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #f8f9fa;
+        color: #202124;
+      }
+
+      .app-container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 16px;
+      }
+
+      /* Section containers */
+      .section-container {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        margin-bottom: 24px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        color: #202124;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Header styles */
+      .header {
+        text-align: center;
+      }
+
+      .header .logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 8px;
+      }
+
+      .header h1 {
+        font-size: 20px;
+        font-weight: 500;
+        margin: 8px 0;
+        color: #202124;
+      }
+
+      .header p {
+        font-size: 14px;
+        color: #5f6368;
+        margin: 8px 0 0;
+      }
+
+      /* Steps styles */
+      .steps-container {
+        margin-left: 8px;
+      }
+
+      .step {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+      }
+
+      .step-number {
+        background-color: #34a853;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .step p {
+        margin: 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .step a {
+        color: #4285f4;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Form styles */
+      .form-field {
+        margin-bottom: 16px;
+      }
+
+      .form-field label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #5f6368;
+      }
+
+      .form-field select,
+      .form-field textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #202124;
+        background-color: white;
+        transition: border-color 0.2s ease;
+      }
+
+      .form-field select:focus,
+      .form-field textarea:focus {
+        border-color: #34a853;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(52, 168, 83, 0.2);
+      }
+
+      .form-field textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      /* Button styles */
+      button {
+        font-family: "Google Sans", "Roboto", Arial, sans-serif;
+        font-weight: 500;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        padding: 10px 16px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .primary-button {
+        background-color: #34a853;
+        color: white;
+        width: 100%;
+        max-width: 200px;
+      }
+
+      .primary-button:hover:not(:disabled) {
+        background-color: #2d9249;
+      }
+
+      .secondary-button {
+        background-color: white;
+        color: #34a853;
+        border: 1px solid #34a853;
+      }
+
+      .secondary-button:hover:not(:disabled) {
+        background-color: rgba(52, 168, 83, 0.05);
+      }
+
+      /* Spinner animation */
+      @keyframes spinner {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: currentColor;
+        animation: spinner 0.8s linear infinite;
+      }
+
+      /* Status styles */
+      .status {
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 13px;
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .status-success {
+        background-color: rgba(52, 168, 83, 0.1);
+        color: #34a853;
+      }
+
+      .status-error {
+        background-color: rgba(234, 67, 53, 0.1);
+        color: #ea4335;
+      }
+
+      .status-info {
+        background-color: rgba(66, 133, 244, 0.1);
+        color: #4285f4;
+      }
+
+      /* Multiselect styles */
+      .multiselect-container {
+        position: relative;
+      }
+
+      .multiselect-selected {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 8px;
+        min-height: 24px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .multiselect-selected .placeholder {
+        color: #757575;
+      }
+
+      .multiselect-tag {
+        background-color: #e8f5e9;
+        border-radius: 2px;
+        padding: 2px 6px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .multiselect-tag button {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+        line-height: 0;
+        color: #5f6368;
+      }
+
+      .multiselect-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .multiselect-search {
+        padding: 8px;
+        border-bottom: 1px solid #dadce0;
+      }
+
+      .multiselect-search input {
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .multiselect-all {
+        padding: 8px 12px;
+        font-weight: 500;
+        border-bottom: 1px solid #dadce0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .multiselect-all:hover {
+        background-color: #f8f9fa;
+      }
+
+      .multiselect-option {
+        padding: 8px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .multiselect-option:hover {
+        background-color: #f8f9fa;
+      }
+
+      .multiselect-option.selected {
+        background-color: #e8f5e9;
+      }
+
+      /* Log viewer styles */
+      .log-viewer {
+        background-color: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        max-height: 150px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      .log-entry {
+        margin: 4px 0;
+        padding: 4px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .log-timestamp {
+        color: #5f6368;
+        margin-right: 8px;
+      }
+
+      .empty-log {
+        padding: 8px;
+        color: #757575;
+        font-style: italic;
+      }
+
+      /* Tooltip styles */
+      .tooltip {
+        position: relative;
+        display: inline-block;
+        margin-left: 4px;
+      }
+
+      .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: white;
+        text-align: center;
+        border-radius: 4px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+      }
+
+      .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* Selection count */
+      .selection-count {
+        font-size: 13px;
+        color: #5f6368;
+        margin-top: 4px;
+      }
+
+      /* Form actions */
+      .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      /* Scrollbar styles */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+
+      /* Tab new */
+
+      .tab-container {
+        width: 100%;
+        margin-top: 24px;
+        border-bottom: 1px solid #dadce0;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 16px;
+        margin-bottom: -1px;
+      }
+
+      .tab {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #5f6368;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+      }
+
+      .tab.active {
+        color: #34a853;
+        border-bottom: 2px solid #34a853;
+      }
+
+      .tab:hover:not(.active) {
+        color: #202124;
+        border-bottom: 2px solid #dadce0;
+      }
+
+      .tab-content {
+        padding: 16px 0;
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+      .tracking-category-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px; /* Optional: spacing between the columns */
+      }
+
+      .flex-item {
+        flex: 1; /* Allows items to grow equally */
+      }
+
+      .no-extra-options {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header Section -->
+      <div class="section-container header">
+        <div class="logo">
+          <img
+            src="https://api.iconify.design/lucide:database.svg?color=%2334A853"
+            alt="Database Icon"
+            width="32"
+            height="32"
+          />
+        </div>
+        <h1>Accounting BI Report Tools</h1>
+        <p>Generate and view accounting reports directly in Google Sheets</p>
+      </div>
+
+      <!-- Instructions Section -->
+      <!-- <div class="section-container">
+        <h2 class="section-title">
+          <img
+            src="https://api.iconify.design/lucide:check-check.svg?color=%2334A853"
+            alt="Steps Icon"
+            width="18"
+            height="18"
+          />
+          Follow these steps
+        </h2>
+
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-number">1</div>
+            <p>
+              Head to
+              <a
+                href="https://app.accounting.bi/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                https://app.accounting.bi/
+                <img
+                  src="https://api.iconify.design/lucide:external-link.svg"
+                  alt="External Link"
+                  width="14"
+                  height="14"
+                />
+              </a>
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <p>Follow the steps to login and generate a report</p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <p>
+              Copy the bearer token from your account
+              <img
+                src="https://api.iconify.design/lucide:clipboard-copy.svg"
+                alt="Copy"
+                width="14"
+                height="14"
+              />
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">4</div>
+            <p>
+              Complete the form below and generate your report
+              <img
+                src="https://api.iconify.design/lucide:pie-chart.svg"
+                alt="Chart"
+                width="14"
+                height="14"
+              />
+            </p>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Report Configuration Section -->
+      <div class="section-container">
+        <h2 class="section-title">
+          <img
+            src="https://api.iconify.design/lucide:database.svg?color=%2334A853"
+            alt="Database Icon"
+            width="18"
+            height="18"
+          />
+          Report Configuration
+        </h2>
+
+        <!-- <div class="form-field">
+          <label for="environment">Environment</label>
+          <select id="environment">
+            <option value="Live">Live</option>
+            <option value="Staging">Staging</option>
+          </select>
+        </div> -->
+
+        <div class="form-field">
+          <label for="reportType">Select Report Type</label>
+          <select id="reportType">
+            <option value="balanceSheet">Balance Sheet</option>
+            <option value="profitAndLoss">Profit and Loss</option>
+            <option value="contacts">Contacts</option>
+            <option value="invoices">Invoices</option>
+            <option value="journals">Journals</option>
+            <option value="accounts">Accounts</option>
+            <option value="trialBalance">Trial balance</option>
+            <option value="budgets">Budgets</option>
+            <option value="creditNotes">Credit notes</option>
+            <option value="chartsOfAccounts">Charts of accounts</option>
+          </select>
+        </div>
+
+        <!-- <div class="form-field">
+          <label for="token">
+            Bearer Token
+            <div class="tooltip">
+              <img
+                src="https://api.iconify.design/lucide:info.svg?color=%235f6368"
+                alt="Info"
+                width="14"
+                height="14"
+              />
+              <span class="tooltip-text"
+                >Enter the authentication token from your account.</span
+              >
+            </div>
+          </label>
+          <textarea
+            id="token"
+            rows="3"
+            placeholder="Paste your bearer token here"
+          ></textarea>
+        </div> -->
+        <button id="logOutButton">Logout</button>
+
+        <div id="tokenStatus" class="status" style="display: none"></div>
+
+        <div class="form-actions">
+          <button type="button" id="fetchReportButton" class="primary-button">
+            <span class="spinner" style="display: none"></span>
+            <span class="button-text">Fetch Report</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Create Report Section -->
+      <div id="createReportSection" class="section-container">
+        <h2 class="section-title">
+          <img
+            src="https://api.iconify.design/lucide:file-plus.svg?color=%2334A853"
+            alt="Create Report Icon"
+            width="18"
+            height="18"
+          />
+          Create Report
+        </h2>
+
+        <!-- <div class="form-field">
+          <label for="createEnvironment">Environment</label>
+          <select id="createEnvironment">
+            <option value="Live">Live</option>
+            <option value="Staging">Staging</option>
+          </select>
+        </div> -->
+
+        <div class="form-field">
+          <label for="createReportType">Report Type</label>
+          <select id="createReportType">
+            <option value="balanceSheet">Balance Sheet</option>
+            <option value="profitAndLoss">Profit and Loss</option>
+            <option value="contacts">Contacts</option>
+            <option value="invoices">Invoices</option>
+            <option value="journals">Journals</option>
+            <option value="accounts">Accounts</option>
+            <option value="trialBalance">Trial balance</option>
+            <option value="budgets">Budgets</option>
+            <option value="creditNotes">Credit notes</option>
+            <option value="chartsOfAccounts">Charts of accounts</option>
+          </select>
+        </div>
+        <!-- Organization Selection -->
+        <div id="orgSelectionContainer" style="display: none">
+          <div class="form-field">
+            <label for="organizations">Select Organizations</label>
+            <div class="multiselect-container">
+              <!-- ... existing organization selection content ... -->
+              <div class="multiselect-container">
+                <div class="multiselect-selected" id="organizationSelect">
+                  <div class="placeholder">Select organizations to include in the report</div>
+                </div>
+                <div class="multiselect-dropdown" style="display: none">
+                  <div class="multiselect-search">
+                    <input type="text" placeholder="Search organizations..." id="orgSearchInput" />
+                  </div>
+                  <div class="multiselect-all" id="orgSelectAll">
+                    <img
+                      src="https://api.iconify.design/lucide:check.svg"
+                      alt="Check"
+                      width="16"
+                      height="16"
+                      style="opacity: 0"
+                    />
+                    Select All
+                  </div>
+                  <div class="multiselect-options" id="orgOptions"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Fetch Organizaction Button -->
+        <div class="form-actions">
+          <button type="button" id="fetchOrgsButton" class="secondary-button">
+            <span class="spinner" style="display: none"></span>
+            <span class="button-text">Fetch Organizations</span>
+          </button>
+        </div>
+        <!-- TAB code -->
+        <div class="tab-container">
+          <div class="tabs">
+            <div class="tab active" data-tab="organizations">Options</div>
+            <div class="tab" data-tab="categories">Extra</div>
+          </div>
+
+          <!-- Add the tab panels -->
+          <div class="tab-content">
+            <div id="organizationsPanel" class="tab-panel active">
+              <!-- Organization selection content -->
+              <div id="reportOptions" class="form-field" style="display: none">
+                <!-- Date Input -->
+                <div id="dateField" style="display: none">
+                  <label for="reportDate">Date</label>
+                  <input type="date" id="reportDate" class="form-input" />
+                </div>
+
+                <!-- Date Range Input -->
+                <div id="fromDateField" style="display: none">
+                  <label for="fromReportDate">From Date</label>
+                  <input type="date" id="fromReportDate" class="form-input" />
+                </div>
+
+                <div id="toDateField" style="display: none">
+                  <label for="toReportDate">To Date</label>
+                  <input type="date" id="toReportDate" class="form-input" />
+                </div>
+
+                <!-- Periods Input -->
+                <div id="periodsField" style="display: none">
+                  <label for="periods">Periods</label>
+                  <input type="number" id="periods" class="form-input" min="1" value="1" />
+                </div>
+
+                <!-- Timeframe Input -->
+                <div id="timeframeField" style="display: none">
+                  <label for="timeframe">Timeframe</label>
+                  <select id="timeframe" class="form-input">
+                    <option value="MONTH">Monthly</option>
+                    <option value="QUARTER">Quarterly</option>
+                    <option value="YEAR">Yearly</option>
+                  </select>
+                </div>
+
+                <!-- Standard Layout -->
+                <div id="standardLayoutField" style="display: none">
+                  <label for="standardLayout">Standard Layout</label>
+                  <select id="standardLayout" class="form-input">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+
+                <!-- Payments Only -->
+                <div id="paymentsOnlyField" style="display: none">
+                  <label for="paymentsOnly">Payments Only</label>
+                  <select id="paymentsOnly" class="form-input">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="categoriesPanel" class="tab-panel">
+              <!-- Categories content -->
+              <div class="tracking-category-container">
+                <div class="flex-item">
+                  <div class="form-field">
+                    <label for="trackingOption1Select">Select Tracking option 1</label>
+                    <div class="multiselect-container">
+                      <div class="multiselect-selected" id="trackingOption1Select">
+                        <div class="placeholder">
+                          Select tracking category to include in the report
+                        </div>
+                      </div>
+                      <div
+                        class="multiselect-dropdown"
+                        id="trackingOption1Dropdown"
+                        style="display: none"
+                      >
+                        <div class="multiselect-search">
+                          <input
+                            type="text"
+                            placeholder="Search tracking options..."
+                            id="trackingOption1SearchInput"
+                          />
+                        </div>
+                        <div class="multiselect-all" id="trackingOption1SelectAll">
+                          <img
+                            src="https://api.iconify.design/lucide:check.svg"
+                            alt="Check"
+                            width="16"
+                            height="16"
+                            style="opacity: 0"
+                          />
+                          Select All
+                        </div>
+                        <div class="multiselect-options" id="trackingOption1Options"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex-item">
+                  <div class="form-field">
+                    <label for="trackingOption2Select">Select Tracking option 2</label>
+                    <div class="multiselect-container">
+                      <div class="multiselect-selected" id="trackingOption2Select">
+                        <div class="placeholder">
+                          Select tracking category to include in the report
+                        </div>
+                      </div>
+                      <div
+                        class="multiselect-dropdown"
+                        id="trackingOption2Dropdown"
+                        style="display: none"
+                      >
+                        <div class="multiselect-search">
+                          <input
+                            type="text"
+                            placeholder="Search tracking options..."
+                            id="trackingOption2SearchInput"
+                          />
+                        </div>
+                        <div class="multiselect-all" id="trackingOption2SelectAll">
+                          <img
+                            src="https://api.iconify.design/lucide:check.svg"
+                            alt="Check"
+                            width="16"
+                            height="16"
+                            style="opacity: 0"
+                          />
+                          Select All
+                        </div>
+                        <div class="multiselect-options" id="trackingOption2Options"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="selectionCount" class="selection-count" style="display: none"></div>
+
+        <div class="form-actions">
+          <button type="button" id="generateReportButton" class="primary-button" disabled>
+            <span class="spinner" style="display: none"></span>
+            <img
+              src="https://api.iconify.design/lucide:file-spreadsheet.svg?color=white"
+              alt="Spreadsheet"
+              width="16"
+              height="16"
+            />
+            <span class="button-text">Generate Report</span>
+          </button>
+        </div>
+        <!-- TAB code END -->
+      </div>
+
+      <!-- Log Viewer Section -->
+      <div class="section-container">
+        <h2 class="section-title">
+          <img
+            src="https://api.iconify.design/lucide:terminal.svg?color=%2334A853"
+            alt="Terminal Icon"
+            width="18"
+            height="18"
+          />
+          Activity Log
+        </h2>
+
+        <div class="log-viewer">
+          <div id="logContent">
+            <div class="empty-log">No activity logged yet. Actions will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      Office.onReady(() => {
+        console.log("Office.js is ready");
+        this.handleFetchOrgs();
+      });
+      // Constants and configurations
+      const CONFIG = {
+        REPORT_CONFIGS: {
+          accounts: { fields: [] },
+          balanceSheet: {
+            fields: ["date", "periods", "timeframe", "standardLayout"],
+          },
+          profitAndLoss: {
+            fields: ["fromDate", "toDate", "periods", "timeframe", "standardLayout"],
+          },
+          trialBalance: {
+            fields: ["date", "periods", "paymentsOnly"],
+          },
+          contacts: { fields: [] },
+          invoices: { fields: [] },
+          journals: { fields: [] },
+          budgets: { fields: [] },
+          creditNotes: { fields: [] },
+          chartsOfAccounts: { fields: [] },
+        },
+      };
+
+      // State management
+      const AppState = {
+        selectedOrgs: [],
+        organizations: [],
+        trackingOptions1: [],
+        trackingOptions2: [],
+        selectedTrackingOptions1: [],
+        selectedTrackingOptions2: [],
+        trackingCategory1: [],
+        trackingCategory2: [],
+        selectedTrackingCategory1: [],
+        selectedTrackingCategory2: [],
+        // Store tracking categories by organization for easy management
+        orgTrackingCategories: {}, // Structure: { orgId: { category1, category2 } }
+        isLoadingOrgs: false,
+        isGeneratingReport: false,
+        activeTab: "organizations",
+        token: "",
+      };
+      // DOM Elements
+      const DOM = {
+        tokenInput: document.getElementById("token"),
+        logOutButton: document.getElementById("logOutButton"),
+        fetchOrgsButton: document.getElementById("fetchOrgsButton"),
+        generateReportButton: document.getElementById("generateReportButton"),
+        tokenStatus: document.getElementById("tokenStatus"),
+        organizationSelect: document.getElementById("organizationSelect"),
+        orgSearchInput: document.getElementById("orgSearchInput"),
+        orgOptions: document.getElementById("orgOptions"),
+        multiSelectDropdown: document.querySelector(".multiselect-dropdown"),
+        selectionCount: document.getElementById("selectionCount"),
+        logContent: document.getElementById("logContent"),
+        createReportSection: document.getElementById("createReportSection"),
+        createReportType: document.getElementById("createReportType"),
+        reportOptions: document.getElementById("reportOptions"),
+        orgSelectionContainer: document.getElementById("orgSelectionContainer"),
+        fetchReportButton: document.getElementById("fetchReportButton"),
+        tabs: document.querySelectorAll(".tab"),
+        tabPanels: document.querySelectorAll(".tab-panel"),
+
+        // new tracking optons
+        trackingOption1Select: document.getElementById("trackingOption1Select"),
+        trackingOption1SearchInput: document.getElementById("trackingOption1SearchInput"),
+        trackingOption1Options: document.getElementById("trackingOption1Options"),
+        trackingOption1Dropdown: document.getElementById("trackingOption1Dropdown"),
+        trackingOption1SelectAll: document.getElementById("trackingOption1SelectAll"),
+
+        trackingOption2Select: document.getElementById("trackingOption2Select"),
+        trackingOption2SearchInput: document.getElementById("trackingOption2SearchInput"),
+        trackingOption2Options: document.getElementById("trackingOption2Options"),
+        trackingOption2Dropdown: document.getElementById("trackingOption2Dropdown"),
+        trackingOption2SelectAll: document.getElementById("trackingOption2SelectAll"),
+
+        orgSelectAll: document.getElementById("orgSelectAll"),
+      };
+
+      // Utility functions
+      const Utilities = {
+        addLog(message, type = "info") {
+          const now = new Date();
+          const timestamp = now.toLocaleTimeString();
+          const logEntry = document.createElement("div");
+          logEntry.className = "log-entry";
+
+          const color = type === "success" ? "#34A853" : type === "error" ? "#EA4335" : "#4285F4";
+
+          logEntry.innerHTML = `
+                                                     <span class="log-timestamp">[${timestamp}]</span>
+                                                     <span style="color: ${color}">${message}</span>
+                                                   `;
+
+          const emptyLog = DOM.logContent.querySelector(".empty-log");
+          if (emptyLog) {
+            DOM.logContent.removeChild(emptyLog);
+          }
+
+          DOM.logContent.appendChild(logEntry);
+          DOM.logContent.scrollTop = DOM.logContent.scrollHeight;
+        },
+
+        showStatus(message, type) {
+          DOM.tokenStatus.className = `status status-${type}`;
+          DOM.tokenStatus.innerHTML = `
+                                                     <img src="https://api.iconify.design/lucide:${
+                                                       type === "success"
+                                                         ? "check-circle"
+                                                         : type === "error"
+                                                           ? "alert-circle"
+                                                           : "info"
+                                                     }.svg?color=${
+                                                       type === "success"
+                                                         ? "%2334A853"
+                                                         : type === "error"
+                                                           ? "%23EA4335"
+                                                           : "%234285F4"
+                                                     }" alt="${type}" width="16" height="16">
+                                                     ${message}
+                                                   `;
+          DOM.tokenStatus.style.display = "flex";
+
+          if (type !== "info") {
+            setTimeout(() => {
+              DOM.tokenStatus.style.display = "none";
+            }, 5000);
+          }
+        },
+
+        setButtonLoading(button, isLoading) {
+          const spinner = button.querySelector(".spinner");
+          if (isLoading) {
+            spinner.style.display = "block";
+            button.disabled = true;
+          } else {
+            spinner.style.display = "none";
+            button.disabled = false;
+          }
+        },
+
+        //  new tag
+
+        updateTabDisplay(tabId) {
+          // Update tab buttons
+          DOM.tabs.forEach((tab) => {
+            tab.classList.remove("active");
+            if (tab.dataset.tab === tabId) {
+              tab.classList.add("active");
+            }
+          });
+
+          // Update tab panels
+          const panels = document.querySelectorAll(".tab-panel");
+          panels.forEach((panel) => {
+            panel.classList.remove("active");
+            if (panel.id === `${tabId}Panel`) {
+              panel.classList.add("active");
+            }
+          });
+
+          AppState.activeTab = tabId;
+        },
+
+        onTabClick(event) {
+          const tab = event.target.closest(".tab");
+          if (!tab) return;
+
+          const tabId = tab.dataset.tab;
+          Utilities.updateTabDisplay(tabId);
+        },
+
+        updateReportOptions(reportType) {
+          const config = CONFIG.REPORT_CONFIGS[reportType];
+          const allFields = [
+            "date",
+            "fromDate",
+            "toDate",
+            "periods",
+            "timeframe",
+            "standardLayout",
+            "paymentsOnly",
+          ];
+
+          allFields.forEach((field) => {
+            const element = document.getElementById(`${field}Field`);
+            if (element) {
+              element.style.display = "none";
+            }
+          });
+
+          if (config.fields.length > 0) {
+            DOM.reportOptions.style.display = "block";
+            config.fields.forEach((field) => {
+              const element = document.getElementById(`${field}Field`);
+              if (element) {
+                element.style.display = "block";
+              }
+            });
+          } else {
+            DOM.reportOptions.style.display = "none";
+          }
+        },
+
+        updateTabVisibility(reportType) {
+          const categoriesPanel = document.getElementById("categoriesPanel");
+
+          if (reportType === "balanceSheet" || reportType === "profitAndLoss") {
+            // Show the multiselect containers
+            document.querySelector(".tracking-category-container").style.display = "block";
+
+            // Update labels based on report type
+            const label1 = document.querySelector('label[for="trackingOption1Select"]');
+            const label2 = document.querySelector('label[for="trackingOption2Select"]');
+
+            if (reportType === "balanceSheet") {
+              label1.textContent = "Select Tracking Option 1";
+              label2.textContent = "Select Tracking Option 2";
+
+              // Update placeholders
+              const placeholder1 = DOM.trackingOption1Select.querySelector(".placeholder");
+              const placeholder2 = DOM.trackingOption2Select.querySelector(".placeholder");
+              if (placeholder1)
+                placeholder1.textContent = "Select tracking options to include in the report";
+              if (placeholder2)
+                placeholder2.textContent = "Select tracking options to include in the report";
+            } else if (reportType === "profitAndLoss") {
+              label1.textContent = "Select Tracking Category 1";
+              label2.textContent = "Select Tracking Category 2";
+
+              // Update placeholders
+              const placeholder1 = DOM.trackingOption1Select.querySelector(".placeholder");
+              const placeholder2 = DOM.trackingOption2Select.querySelector(".placeholder");
+              if (placeholder1)
+                placeholder1.textContent = "Select tracking category to include in the report";
+              if (placeholder2)
+                placeholder2.textContent = "Select tracking category to include in the report";
+            }
+          } else {
+            // Hide multiselect containers and show message
+            document.querySelector(".tracking-category-container").style.display = "none";
+
+            // Create or update the no options message
+            let noOptionsMsg = categoriesPanel.querySelector(".no-extra-options");
+            if (!noOptionsMsg) {
+              noOptionsMsg = document.createElement("div");
+              noOptionsMsg.className = "no-extra-options";
+              categoriesPanel.appendChild(noOptionsMsg);
+            }
+            noOptionsMsg.textContent = "No extra options are available";
+            noOptionsMsg.style.display = "block";
+          }
+        },
+      };
+
+      // API Service
+      const ApiService = {
+        // ✅ Get bearer token from Office storage
+        async fetchBearerToken() {
+          return await OfficeRuntime.storage.getItem("authToken");
+        },
+
+        // ✅ Remove bearer token
+        async removeToken() {
+          await OfficeRuntime.storage.removeItem("authToken");
+        },
+
+        // ✅ Fetch Organizations from your API
+        async fetchOrganizations(token, environment) {
+          const url =
+            environment === "Live"
+              ? "https://api.accounting.bi/accounts-service/accounts"
+              : "https://api.staging.accounting.bi/accounts-service/accounts";
+
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Error fetching organizations: ${errorText}`);
+          }
+
+          const result = await response.json();
+          return result.map((org) => ({
+            value: org.orgId,
+            label: org.orgName,
+          }));
+        },
+
+        // ✅ Generate report
+        async generateReport(params) {
+          const orgId = params.organizations.map((org) => org.value);
+          const url =
+            params.environment === "Live"
+              ? `https://api.accounting.bi/reports-service/reports/xero/${params.reportType}`
+              : `https://api.staging.accounting.bi/reports-service/reports/xero/${params.reportType}`;
+
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${params.token}`,
+              "X-UserID": "2", // hardcoded like original
+              "X-OrgIDs": orgId.join(","),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(params.body),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(`Error generating report: ${result.message || JSON.stringify(result)}`);
+          }
+
+          return result;
+        },
+
+        // ✅ Fetch Report Data
+        async fetchReport(params) {
+          const baseUrl =
+            params.environment === "Live"
+              ? "https://api.accounting.bi/connectors/accounting/xero/"
+              : "https://api.staging.accounting.bi/connectors/accounting/xero/";
+
+          const url = `${baseUrl}${params.reportType}`;
+
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${params.token}`,
+            },
+          });
+
+          console.log("response came", response);
+
+          const initialData = await response.json();
+
+          if (!response.ok) {
+            throw new Error(`Initial fetch failed: ${initialData.message || "Unknown error"}`);
+          }
+
+          if (!initialData.url) {
+            const followupRes = await fetch(initialData.url, {
+              headers: {
+                Authorization: `Bearer ${params.token}`,
+              },
+            });
+
+            const followupData = await followupRes.json();
+
+            if (!followupRes.ok) {
+              throw new Error(`Follow-up fetch failed: ${followupData.message || "Unknown error"}`);
+            }
+
+            return followupData;
+          }
+
+          return initialData;
+        },
+
+        // ✅ Get tracking categories
+        async getTracking(params) {
+          const orgId = params.organizations.map((org) => org.value)[0];
+
+          const url =
+            params.environment === "Live"
+              ? `https://api.accounting.bi/reports-service/reports/xero/tracking-categories`
+              : `https://api.staging.accounting.bi/reports-service/reports/xero/tracking-categories`;
+
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${params.token}`,
+              "X-UserID": "2",
+              "X-OrgIDs": orgId,
+              "X-OrgID": orgId,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch tracking: ${result.message || "Unknown error"}`);
+          }
+
+          return result;
+        },
+      };
+
+      // Event Handlers
+      const EventHandlers = {
+        init() {
+          // Token input handlers
+          // DOM.tokenInput.addEventListener("input", this.handleTokenInput.bind(this));
+          DOM.logOutButton.addEventListener("click", this.handleLogOutClick.bind(this));
+
+          // Button handlers
+          DOM.fetchOrgsButton.addEventListener("click", this.handleFetchOrgs.bind(this));
+          DOM.generateReportButton.addEventListener("click", this.handleGenerateReport.bind(this));
+          DOM.fetchReportButton.addEventListener("click", this.handleFetchReport.bind(this));
+
+          // Report type change handler
+          DOM.createReportType.addEventListener("change", () => {
+            EventHandlers.updateTrackingOptionsList(1);
+            EventHandlers.updateTrackingOptionsList(2);
+          });
+
+          // Initialize multiselect
+          this.initializeMultiSelect();
+
+          // Initialize tracking multiselects
+          this.initializeTrackingMultiSelects();
+
+          // Tab functionality
+          document.querySelectorAll(".tab").forEach((tab) => {
+            tab.addEventListener("click", (event) => {
+              const tabId = event.target.dataset.tab;
+              Utilities.updateTabDisplay(tabId);
+            });
+          });
+        },
+
+        handleTokenInput(event) {
+          const token = event.target.value.trim();
+          DOM.fetchReportButton.disabled = !token;
+
+          // Auto-fetch organizations when token is entered
+          if (token && token.length > 20) {
+            this.handleFetchOrgs();
+          }
+        },
+
+        handleLogOutClick() {
+          this.removeToken();
+        },
+
+        // new for the tracking option
+        initializeTrackingMultiSelects() {
+          // Tracking Option 1
+          DOM.trackingOption1Select.addEventListener("click", (e) => {
+            // Don't close dropdown when clicking inside the selected area (except when clicking remove buttons)
+            if (!e.target.closest("button")) {
+              DOM.trackingOption1Dropdown.style.display =
+                DOM.trackingOption1Dropdown.style.display === "none" ? "block" : "none";
+            }
+          });
+
+          DOM.trackingOption1SearchInput.addEventListener("input", (e) => {
+            this.filterTrackingOptions(1, e.target.value);
+          });
+
+          DOM.trackingOption1SelectAll.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent closing dropdown
+            this.toggleAllTrackingOptions(1);
+          });
+
+          // Tracking Option 2
+          DOM.trackingOption2Select.addEventListener("click", (e) => {
+            // Don't close dropdown when clicking inside the selected area (except when clicking remove buttons)
+            if (!e.target.closest("button")) {
+              DOM.trackingOption2Dropdown.style.display =
+                DOM.trackingOption2Dropdown.style.display === "none" ? "block" : "none";
+            }
+          });
+
+          DOM.trackingOption2SearchInput.addEventListener("input", (e) => {
+            this.filterTrackingOptions(2, e.target.value);
+          });
+
+          DOM.trackingOption2SelectAll.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent closing dropdown
+            this.toggleAllTrackingOptions(2);
+          });
+
+          DOM.createReportType.addEventListener("change", (e) => {
+            Utilities.updateReportOptions(e.target.value);
+            Utilities.updateTabVisibility(e.target.value);
+            EventHandlers.updateTrackingOptionsList(1);
+            EventHandlers.updateTrackingOptionsList(2);
+          });
+        },
+
+        async removeToken() {
+          try {
+            await OfficeRuntime.storage.removeItem("authToken"); // Remove the token
+            window.location.href = "taskpane.html"; // Let taskpane logic re-run and redirect to login
+            // await ApiService.removeToken();
+
+            // Clear the token input
+            DOM.tokenInput.value = "";
+
+            // Reset application state
+            AppState.selectedOrgs = [];
+            AppState.organizations = [];
+            AppState.trackingOptions1 = [];
+            AppState.trackingOptions2 = [];
+            AppState.selectedTrackingOptions1 = [];
+            AppState.selectedTrackingOptions2 = [];
+            AppState.trackingCategory1 = [];
+            AppState.trackingCategory2 = [];
+            AppState.selectedTrackingCategory1 = [];
+            AppState.selectedTrackingCategory2 = [];
+            AppState.orgTrackingCategories = {};
+
+            // Hide UI elements
+            DOM.orgSelectionContainer.style.display = "none";
+            DOM.createReportSection.style.display = "none";
+
+            // Reset organization display
+            DOM.organizationSelect.innerHTML =
+              '<div class="placeholder">Select organizations to include in the report</div>';
+            DOM.selectionCount.style.display = "none";
+
+            // Reset tracking displays
+            this.updateTrackingOptionDisplay(1);
+            this.updateTrackingOptionDisplay(2);
+
+            // Disable buttons
+            DOM.generateReportButton.disabled = true;
+            DOM.fetchReportButton.disabled = true;
+
+            Utilities.showStatus("Logged out successfully", "success");
+            Utilities.addLog("Logged out successfully", "success");
+          } catch (error) {
+            Utilities.showStatus("Error during logout: " + error.message, "error");
+            Utilities.addLog("Error during logout: " + error.message, "error");
+          }
+        },
+
+        toggleAllTrackingOptions(optionNumber) {
+          const options =
+            optionNumber === 1 ? AppState.trackingOptions1 : AppState.trackingOptions2;
+          const selectedOptions =
+            optionNumber === 1
+              ? AppState.selectedTrackingOptions1
+              : AppState.selectedTrackingOptions2;
+
+          // Check if all are already selected
+          const allSelected = options.length === selectedOptions.length;
+
+          if (allSelected) {
+            // Deselect all
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1 = [];
+            } else {
+              AppState.selectedTrackingOptions2 = [];
+            }
+          } else {
+            // Select all
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1 = [...options];
+            } else {
+              AppState.selectedTrackingOptions2 = [...options];
+            }
+          }
+
+          this.updateTrackingOptionsList(optionNumber);
+          this.updateTrackingOptionDisplay(optionNumber);
+        },
+
+        // updateTrackingOptionsList(optionNumber) {
+        //   const reportType = DOM.createReportType.value;
+        //   const optionsContainer = optionNumber === 1
+        //     ? DOM.trackingOption1Options
+        //     : DOM.trackingOption2Options;
+        //   optionsContainer.innerHTML = "";
+
+        //   const allOptions = reportType === "profitAndLoss"
+        //     ? optionNumber === 1
+        //       ? AppState.trackingCategory1
+        //       : AppState.trackingCategory2
+        //     : optionNumber === 1
+        //       ? AppState.trackingOptions1
+        //       : AppState.trackingOptions2;
+
+        //   allOptions.forEach(opt => {
+        //     const selectedOptions = optionNumber === 1
+        //       ? AppState.selectedTrackingOptions1
+        //       : AppState.selectedTrackingOptions2;
+        //     const isSelected = selectedOptions.some(selected => selected.value === opt.value);
+
+        //     const option = document.createElement("div");
+        //     option.className = `multiselect-option ${isSelected ? "selected" : ""}`;
+        //     option.onclick = (e) => {
+        //       e.stopPropagation();
+        //       this.toggleTrackingOption(optionNumber, opt);
+        //     };
+        //     option.innerHTML = `
+        //       <img src="https://api.iconify.design/lucide:check.svg" alt="Check" width="16" height="16"
+        //           style="opacity: ${isSelected ? "1" : "0"}">
+        //       ${opt.label}
+        //     `;
+        //     optionsContainer.appendChild(option);
+        //   });
+        // },
+
+        toggleTrackingOption(optionNumber, option) {
+          const selectedOptions =
+            optionNumber === 1
+              ? AppState.selectedTrackingOptions1
+              : AppState.selectedTrackingOptions2;
+          const index = selectedOptions.findIndex((opt) => opt.value === option.value);
+
+          if (index === -1) {
+            // Add to selected
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1.push(option);
+            } else {
+              AppState.selectedTrackingOptions2.push(option);
+            }
+          } else {
+            // Remove from selected
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1.splice(index, 1);
+            } else {
+              AppState.selectedTrackingOptions2.splice(index, 1);
+            }
+          }
+
+          this.updateTrackingOptionsList(optionNumber);
+          this.updateTrackingOptionDisplay(optionNumber);
+        },
+
+        updateTrackingOptionDisplay(optionNumber) {
+          const selectedOptions =
+            optionNumber === 1
+              ? AppState.selectedTrackingOptions1
+              : AppState.selectedTrackingOptions2;
+          const selectContainer =
+            optionNumber === 1 ? DOM.trackingOption1Select : DOM.trackingOption2Select;
+
+          selectContainer.innerHTML = "";
+
+          if (selectedOptions.length === 0) {
+            selectContainer.innerHTML =
+              '<div class="placeholder">Select tracking category to include in the report</div>';
+          } else {
+            selectedOptions.forEach((opt) => {
+              const tag = document.createElement("div");
+              tag.className = "multiselect-tag";
+              tag.innerHTML = `
+                      ${opt.label}
+                      <button type="button" onclick="EventHandlers.removeTrackingOption(${optionNumber}, '${opt.value}')">×</button>
+                    `;
+              selectContainer.appendChild(tag);
+            });
+          }
+        },
+
+        removeTrackingOption(optionNumber, value) {
+          const selectedOptions =
+            optionNumber === 1
+              ? AppState.selectedTrackingOptions1
+              : AppState.selectedTrackingOptions2;
+          const index = selectedOptions.findIndex((opt) => opt.value === value);
+
+          if (index !== -1) {
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1.splice(index, 1);
+            } else {
+              AppState.selectedTrackingOptions2.splice(index, 1);
+            }
+
+            this.updateTrackingOptionsList(optionNumber);
+            this.updateTrackingOptionDisplay(optionNumber);
+          }
+        },
+
+        filterTrackingOptions(optionNumber, searchTerm) {
+          const reportType = DOM.createReportType.value;
+          let allOptions;
+
+          if (reportType === "profitAndLoss") {
+            // Use tracking categories as options
+            allOptions =
+              optionNumber === 1 ? AppState.trackingCategory1 : AppState.trackingCategory2;
+          } else {
+            // Use regular tracking options
+            allOptions = optionNumber === 1 ? AppState.trackingOptions1 : AppState.trackingOptions2;
+          }
+
+          const filtered = allOptions.filter((opt) =>
+            opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+
+          const optionsContainer =
+            optionNumber === 1 ? DOM.trackingOption1Options : DOM.trackingOption2Options;
+          optionsContainer.innerHTML = "";
+
+          filtered.forEach((opt) => {
+            const selectedOptions =
+              optionNumber === 1
+                ? AppState.selectedTrackingOptions1
+                : AppState.selectedTrackingOptions2;
+            const isSelected = selectedOptions.some((selected) => selected.value === opt.value);
+
+            const option = document.createElement("div");
+            option.className = `multiselect-option ${isSelected ? "selected" : ""}`;
+            option.onclick = (e) => {
+              e.stopPropagation(); // Prevent closing dropdown
+              this.toggleTrackingOption(optionNumber, opt);
+            };
+            option.innerHTML = `
+                    <img src="https://api.iconify.design/lucide:check.svg" alt="Check" width="16" height="16"
+                        style="opacity: ${isSelected ? "1" : "0"}">
+                    ${opt.label}
+                  `;
+            optionsContainer.appendChild(option);
+          });
+        },
+
+        async handleFetchTracking() {
+          if (AppState.selectedOrgs.length === 0) {
+            Utilities.showStatus("Please select at least one organization", "error");
+            return;
+          }
+
+          Utilities.addLog("Fetching tracking options", "info");
+          const token = await ApiService.fetchBearerToken();
+          const environment = "Staging";
+
+          try {
+            Utilities.showStatus("Fetching Tracking Options", "info");
+            Utilities.addLog("Fetching Tracking Options", "info");
+
+            // Clear existing tracking data when fetching new data
+            AppState.trackingCategory1 = [];
+            AppState.trackingCategory2 = [];
+            AppState.trackingOptions1 = [];
+            AppState.trackingOptions2 = [];
+
+            // Process tracking data for each selected organization
+            for (const org of AppState.selectedOrgs) {
+              const params = {
+                token,
+                environment,
+                organizations: [org], // Fetch tracking for a single org at a time
+              };
+
+              const result = await ApiService.getTracking(params);
+
+              // Store tracking categories for this org
+              if (result && result[0] && result[0].TrackingCategories) {
+                // Initialize tracking data for this org if not exists
+                if (!AppState.orgTrackingCategories[org.value]) {
+                  AppState.orgTrackingCategories[org.value] = {
+                    category1: null,
+                    category2: null,
+                  };
+                }
+
+                // Process first tracking category
+                if (result[0].TrackingCategories[0]) {
+                  const tracking1 = result[0].TrackingCategories[0];
+                  const category1 = {
+                    label: tracking1.Name,
+                    value: tracking1.TrackingCategoryID,
+                  };
+
+                  Utilities.addLog(`Tracking category 1 name ${tracking1.Name} ${category1.label}`);
+
+                  // Add to overall category list if not already present
+                  if (!AppState.trackingCategory1.some((cat) => cat.value === category1.value)) {
+                    AppState.trackingCategory1.push(category1);
+                  }
+
+                  // Store for this org specifically
+                  AppState.orgTrackingCategories[org.value].category1 = category1;
+
+                  // Add tracking options
+                  const options1 = tracking1.Options.map((opt) => ({
+                    value: opt.TrackingOptionID,
+                    label: opt.Name,
+                  }));
+
+                  // Add unique options to main list
+                  options1.forEach((opt) => {
+                    if (!AppState.trackingOptions1.some((o) => o.value === opt.value)) {
+                      AppState.trackingOptions1.push(opt);
+                    }
+                  });
+                }
+
+                // Process second tracking category
+                if (result[0].TrackingCategories[1]) {
+                  const tracking2 = result[0].TrackingCategories[1];
+                  const category2 = {
+                    label: tracking2.Name,
+                    value: tracking2.TrackingCategoryID,
+                  };
+
+                  // Add to overall category list if not already present
+                  if (!AppState.trackingCategory2.some((cat) => cat.value === category2.value)) {
+                    AppState.trackingCategory2.push(category2);
+                  }
+
+                  // Store for this org specifically
+                  AppState.orgTrackingCategories[org.value].category2 = category2;
+
+                  // Add tracking options
+                  const options2 = tracking2.Options.map((opt) => ({
+                    value: opt.TrackingOptionID,
+                    label: opt.Name,
+                  }));
+
+                  // Add unique options to main list
+                  options2.forEach((opt) => {
+                    if (!AppState.trackingOptions2.some((o) => o.value === opt.value)) {
+                      AppState.trackingOptions2.push(opt);
+                    }
+                  });
+                }
+              }
+            }
+
+            // Update tracking display after processing all orgs
+            this.updateTrackingCategoryDisplay();
+            this.updateTrackingOptionsList(1);
+            this.updateTrackingOptionsList(2);
+
+            Utilities.showStatus("Tracking options fetched successfully", "success");
+            Utilities.addLog("Tracking options fetched successfully", "success");
+          } catch (error) {
+            Utilities.showStatus(error.message, "error");
+            Utilities.addLog(error.message, "error");
+          }
+        },
+        async handleFetchOrgs() {
+          // const token = DOM.tokenInput.value.trim();
+          const token = await ApiService.fetchBearerToken();
+          // const token = "testing token";
+          const environment = "Staging";
+
+          if (!token) {
+            Utilities.showStatus("Bearer token is required", "error");
+            return;
+          }
+
+          try {
+            Utilities.setButtonLoading(DOM.fetchOrgsButton, true);
+            Utilities.showStatus("Fetching organizations...", "info");
+            Utilities.addLog("Fetching organizations...", "info");
+
+            const organizations = await ApiService.fetchOrganizations(token, environment);
+            AppState.organizations = organizations;
+
+            this.updateOrganizationsList(organizations);
+            DOM.orgSelectionContainer.style.display = "block";
+
+            Utilities.showStatus("Organizations loaded successfully", "success");
+            Utilities.addLog(
+              `Successfully fetched ${organizations.length} organizations`,
+              "success"
+            );
+          } catch (error) {
+            Utilities.showStatus(error.message, "error");
+            Utilities.addLog(error.message, "error");
+          } finally {
+            Utilities.setButtonLoading(DOM.fetchOrgsButton, false);
+          }
+        },
+        // Add this new method for managing tracking category display
+        updateTrackingCategoryDisplay() {
+          // Update tracking category display for category 1
+          const categoryContainer1 =
+            document.getElementById("trackingCategory1Container") || document.createElement("div"); // Create element if it doesn't exist
+
+          categoryContainer1.innerHTML = "";
+          if (AppState.trackingCategory1.length > 0) {
+            Utilities.addLog(
+              `in the update tracking category log ${JSON.stringify(AppState.trackingCategory1[0])} ${AppState.trackingCategory1[0].label} ${AppState.trackingCategory1[0].value}`
+            );
+            const categoryList = document.createElement("div");
+            categoryList.className = "tracking-category-list";
+
+            AppState.trackingCategory1.forEach((category) => {
+              const item = document.createElement("div");
+              item.className = "tracking-category-item";
+              item.innerHTML = `<span class="category-name">${category.label}</span>`;
+              categoryList.appendChild(item);
+            });
+
+            categoryContainer1.appendChild(categoryList);
+          } else {
+            categoryContainer1.innerHTML = "<p>No tracking categories available</p>";
+          }
+
+          // Update tracking category display for category 2
+          const categoryContainer2 =
+            document.getElementById("trackingCategory2Container") || document.createElement("div"); // Create element if it doesn't exist
+
+          categoryContainer2.innerHTML = "";
+          if (AppState.trackingCategory2.length > 0) {
+            const categoryList = document.createElement("div");
+            categoryList.className = "tracking-category-list";
+
+            AppState.trackingCategory2.forEach((category) => {
+              const item = document.createElement("div");
+              item.className = "tracking-category-item";
+              item.innerHTML = `<span class="category-name">${category.label}</span>`;
+              categoryList.appendChild(item);
+            });
+
+            categoryContainer2.appendChild(categoryList);
+          } else {
+            categoryContainer2.innerHTML = "<p>No tracking categories available</p>";
+          }
+        },
+
+        async handleGenerateReport() {
+          if (AppState.selectedOrgs.length === 0) {
+            Utilities.showStatus("Please select at least one organization", "error");
+            return;
+          }
+          const token = await ApiService.fetchBearerToken();
+          const reportType = DOM.createReportType.value;
+          const environment = "Staging";
+          const date = document.getElementById("reportDate").value;
+          const fromDate = document.getElementById("fromReportDate").value;
+          const toDate = document.getElementById("toReportDate").value;
+          let periods = document.getElementById("periods").value;
+          let standardLayout = document.getElementById("standardLayout").value;
+          const timeframe = document.getElementById("timeframe").value;
+          const paymentsOnly = document.getElementById("paymentsOnly").value;
+          let state1 = [];
+          let state2 = [];
+          try {
+            state1 = Array.isArray(AppState.selectedTrackingOptions1)
+              ? AppState.selectedTrackingOptions1.map(
+                  (opt) =>
+                    `{
+                            "name": "${opt?.label}",
+                            "id": "${opt?.value}"
+                          }`
+                )
+              : [];
+
+            state2 = Array.isArray(AppState.selectedTrackingOptions2)
+              ? AppState.selectedTrackingOptions2.map(
+                  (opt) =>
+                    `{
+                            "name": "${opt?.label}",
+                            "id": "${opt?.value}"
+                          }`
+                )
+              : [];
+
+            categoryState1 = Array.isArray(AppState.selectedTrackingCategory1)
+              ? AppState.selectedTrackingCategory1.map(
+                  (opt) =>
+                    `{
+                            "name": "${opt?.label}",
+                            "id": "${opt?.value}"
+                          }`
+                )
+              : [];
+
+            categoryState2 = Array.isArray(AppState.selectedTrackingCategory2)
+              ? AppState.selectedTrackingCategory2.map(
+                  (opt) =>
+                    `{
+                            "name": "${opt?.label}",
+                            "id": "${opt?.value}"
+                          }`
+                )
+              : [];
+          } catch (error) {
+            Utilities.showStatus(state1, "error");
+            Utilities.showStatus(error.message, "error");
+          }
+
+          try {
+            Utilities.setButtonLoading(DOM.generateReportButton, true);
+            Utilities.showStatus("Generating report...", "info");
+            Utilities.addLog("Generating report...", "info");
+            let body = { type: reportType };
+            if (reportType == "balanceSheet") {
+              if (standardLayout == "true") {
+                standardLayout = true;
+              } else {
+                standardLayout = false;
+              }
+              periods = parseInt(periods);
+              // Safely map over AppState.selectedTrackingOptions1
+              body = {
+                ...body,
+                date,
+                periods,
+                standardLayout,
+                timeframe,
+                ...(state1.length && { trackingOptionID1: state1 }),
+                ...(state2.length && { trackingOptionID2: state2 }),
+              };
+            }
+            if (reportType == "profitAndLoss") {
+              if (standardLayout == "true") {
+                standardLayout = true;
+              } else {
+                standardLayout = false;
+              }
+              periods = parseInt(periods);
+              // Safely map over AppState.selectedTrackingOptions1
+              body = {
+                ...body,
+                fromDate,
+                toDate,
+                periods,
+                standardLayout,
+                timeframe,
+                ...(state1.length && { trackingCategoryID1: state1 }),
+                ...(state2.length && { trackingCategoryID2: state2 }),
+              };
+            }
+
+            if (reportType == "trialBalance") {
+              periods = parseInt(periods);
+              body = { ...body, date, periods, paymentsOnly };
+            }
+
+            const params = {
+              token,
+              reportType,
+              environment,
+              organizations: AppState.selectedOrgs,
+              body,
+            };
+
+            const result = await ApiService.generateReport(params);
+
+            Utilities.showStatus("Report generated successfully", "success");
+            Utilities.addLog("Report generated successfully", "success");
+
+            if (result.url) {
+              window.open(result.url, "_blank");
+            }
+          } catch (error) {
+            Utilities.showStatus(error.message, "error");
+            Utilities.addLog(error.message, "error");
+          } finally {
+            Utilities.setButtonLoading(DOM.generateReportButton, false);
+          }
+        },
+
+        async handleFetchReport() {
+          const token = await ApiService.fetchBearerToken();
+          const reportType = document.getElementById("reportType").value;
+          const environment = "Staging";
+          Utilities.showStatus(`currently fetching report fro the nev - ${environment}`, "info");
+          Utilities.addLog(`currently fetching report fro the nev - ${environment}`, "info");
+          if (!token) {
+            Utilities.showStatus("Bearer token is required", "error");
+            return;
+          }
+
+          try {
+            Utilities.setButtonLoading(DOM.fetchReportButton, true);
+            Utilities.showStatus("Fetching report...", "info");
+            Utilities.addLog(`Fetching ${reportType} report...`, "info");
+
+            const data = await ApiService.fetchReport({
+              token,
+              reportType,
+              environment,
+            });
+
+            // Extract the relevant data
+            const followUpResponse = await fetch(data.url, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            const reportData = data.reportType || data.data?.reportType;
+            if (!reportData || reportData.length === 0) {
+              //   sheet.getCell(0, 0).values = [[" No data found"]];
+              //   sheet.getCell(0, 0).format.fill.color = "red";
+              //   sheet.getCell(0, 0).format.font.color = "white";
+              //   throw new Error("No data found in API response");
+              console.log("reportdata is null");
+              messageDiv.textContent = "No data available.";
+              messageDiv.style.color = "red";
+              return Promise.reject(new Error("No data found in API response."));
+            }
+            await Excel.run(async (context) => {
+              const sheet = context.workbook.worksheets.getActiveWorksheet();
+
+              sheet.getUsedRange()?.clear();
+              // sheet.getCell(0, 0).values = [["Fetching data..."]];
+              // sheet.getCell(0, 0).format.fill.color = "yellow";
+              // sheet.getCell(0, 0).format.font.color = "black";
+              await context.sync();
+              // Write data to the worksheet
+              await this.writeDataToSheet(reportData, sheet);
+            });
+
+            // ending code to here
+
+            Utilities.showStatus("Report fetched successfully", "success");
+            Utilities.addLog("Report fetched successfully", "success");
+
+            // if (result.url) {
+            //   window.open(result.url, "_blank");
+            // }
+          } catch (error) {
+            Utilities.showStatus(error.message, "error");
+            Utilities.addLog(error.message, "error");
+          } finally {
+            Utilities.setButtonLoading(DOM.fetchReportButton, false);
+          }
+        },
+
+        // new function to write in the excel
+        async writeDataToSheet(data, sheet) {
+          const messageDiv = document.getElementById("message");
+          if (!data || data.length === 0) {
+            // messageDiv.textContent = "No data available.";
+            // messageDiv.style.color = "red";
+            throw new Error("No data available to process.");
+          }
+
+          //WHY BUT
+          // messageDiv.textContent = "";
+          console.log("reached here json keys");
+          const headers = Object.keys(data[0]);
+          //logMessage(`Headers: ${JSON.stringify(headers)}`);
+          // logMessage(`First Row Example: ${JSON.stringify(data[0])}`);
+
+          // Check for Excel row limit
+          const maxRows = 1048576;
+          if (data.length + 2 > maxRows) {
+            throw new Error("Data exceeds Excel row limit.");
+          }
+
+          // Write headers to row 2
+          //sheet.getRangeByIndexes(startRow, startColumn, rowCount, columnCount);
+          const headerRange = sheet.getRangeByIndexes(0, 0, 1, headers.length);
+          headerRange.values = [headers];
+          headerRange.format.fill.color = "#4CAF50";
+          headerRange.format.font.color = "white";
+          headerRange.format.font.bold = true;
+
+          // Batch write data rows
+          const rows = data.map((row) =>
+            headers.map((header) => (row[header] !== undefined ? row[header] : ""))
+          );
+
+          const batchSize = 1000; // Define batch size
+          for (let i = 0; i < rows.length; i += batchSize) {
+            const batch = rows.slice(i, i + batchSize);
+            const range = sheet.getRangeByIndexes(
+              1 + i, // Start row (row 2 onwards)
+              0, // Start column
+              batch.length,
+              headers.length
+            );
+            range.values = batch;
+
+            await sheet.context.sync(); // Sync after each batch
+            // logMessage(`Processed rows ${i + 1} to ${i + batch.length}`);
+          }
+
+          // Auto-fit columns
+          sheet.getUsedRange()?.format.autofitColumns();
+        },
+
+        // MultiSelect functionality
+        initializeMultiSelect() {
+          DOM.organizationSelect.addEventListener("click", (e) => {
+            // Don't close dropdown when clicking inside the selected area (except when clicking remove buttons)
+            if (!e.target.closest("button")) {
+              DOM.multiSelectDropdown.style.display =
+                DOM.multiSelectDropdown.style.display === "none" ? "block" : "none";
+            }
+          });
+
+          document.addEventListener("click", (e) => {
+            // Only close if clicking outside any multiselect container
+            if (!e.target.closest(".multiselect-container")) {
+              DOM.multiSelectDropdown.style.display = "none";
+              DOM.trackingOption1Dropdown.style.display = "none";
+              DOM.trackingOption2Dropdown.style.display = "none";
+            }
+          });
+
+          DOM.orgSearchInput.addEventListener("input", (e) => {
+            this.filterOrganizations(e.target.value);
+          });
+
+          DOM.orgSelectAll.addEventListener("click", () => {
+            this.toggleAllOrganizations();
+          });
+        },
+
+        updateOrganizationsList(organizations) {
+          DOM.orgOptions.innerHTML = "";
+
+          organizations.forEach((org) => {
+            const isSelected = AppState.selectedOrgs.some(
+              (selected) => selected.value === org.value
+            );
+            const option = document.createElement("div");
+            option.className = `multiselect-option ${isSelected ? "selected" : ""}`;
+            option.onclick = (e) => {
+              e.stopPropagation(); // Prevent closing dropdown
+              this.toggleOrganization(org);
+            };
+            option.innerHTML = `
+                    <img src="https://api.iconify.design/lucide:check.svg" alt="Check" width="16" height="16"
+                        style="opacity: ${isSelected ? "1" : "0"}">
+                    ${org.label}
+                  `;
+            DOM.orgOptions.appendChild(option);
+          });
+
+          // Update "Select All" checkbox state
+          const selectAllImg = DOM.orgSelectAll.querySelector("img");
+          selectAllImg.style.opacity =
+            organizations.length === AppState.selectedOrgs.length && organizations.length > 0
+              ? "1"
+              : "0";
+        },
+
+        toggleOrganization(org) {
+          const index = AppState.selectedOrgs.findIndex((o) => o.value === org.value);
+
+          if (index === -1) {
+            AppState.selectedOrgs.push(org);
+          } else {
+            AppState.selectedOrgs.splice(index, 1);
+
+            // When removing an organization, also remove its tracking categories
+            this.removeOrganizationTrackingData(org.value);
+          }
+
+          this.updateOrganizationsList(AppState.organizations);
+          this.updateSelectedDisplay();
+
+          // Fetch tracking options when organization changes
+          this.handleFetchTracking();
+
+          DOM.generateReportButton.disabled = AppState.selectedOrgs.length === 0;
+        },
+        toggleAllOrganizations() {
+          const allSelected = AppState.organizations.length === AppState.selectedOrgs.length;
+
+          if (allSelected) {
+            // Deselect all
+            AppState.selectedOrgs = [];
+
+            // Clear all tracking data
+            AppState.trackingCategory1 = [];
+            AppState.trackingCategory2 = [];
+            AppState.trackingOptions1 = [];
+            AppState.trackingOptions2 = [];
+            AppState.selectedTrackingOptions1 = [];
+            AppState.selectedTrackingOptions2 = [];
+            AppState.orgTrackingCategories = {};
+
+            this.updateTrackingCategoryDisplay();
+            this.updateTrackingOptionsList(1);
+            this.updateTrackingOptionsList(2);
+          } else {
+            // Select all - create a new array to avoid reference issues
+            AppState.selectedOrgs = [...AppState.organizations];
+          }
+
+          this.updateOrganizationsList(AppState.organizations);
+          this.updateSelectedDisplay();
+
+          // Refetch tracking options when organizations change
+          if (AppState.selectedOrgs.length > 0) {
+            this.handleFetchTracking();
+          }
+
+          DOM.generateReportButton.disabled = AppState.selectedOrgs.length === 0;
+        },
+        updateSelectedDisplay() {
+          DOM.organizationSelect.innerHTML = "";
+
+          if (AppState.selectedOrgs.length === 0) {
+            DOM.organizationSelect.innerHTML =
+              '<div class="placeholder">Select organizations to include in the report</div>';
+          } else {
+            AppState.selectedOrgs.forEach((org) => {
+              const tag = document.createElement("div");
+              tag.className = "multiselect-tag";
+              tag.innerHTML = `
+                                                         ${org.label}
+                                                         <button type="button" onclick="EventHandlers.removeOrganization('${org.value}')">×</button>
+                                                       `;
+              DOM.organizationSelect.appendChild(tag);
+            });
+          }
+
+          DOM.selectionCount.textContent = `${AppState.selectedOrgs.length} of ${AppState.organizations.length} organizations selected`;
+          DOM.selectionCount.style.display = "block";
+        },
+
+        removeOrganization(value) {
+          const index = AppState.selectedOrgs.findIndex((org) => org.value === value);
+          if (index !== -1) {
+            AppState.selectedOrgs.splice(index, 1);
+
+            // Remove tracking data for this organization
+            this.removeOrganizationTrackingData(value);
+
+            this.updateOrganizationsList(AppState.organizations);
+            this.updateSelectedDisplay();
+            DOM.generateReportButton.disabled = AppState.selectedOrgs.length === 0;
+
+            // Refetch tracking options when organizations change
+            if (AppState.selectedOrgs.length > 0) {
+              this.handleFetchTracking();
+            } else {
+              // Clear all tracking data if no orgs selected
+              AppState.trackingCategory1 = [];
+              AppState.trackingCategory2 = [];
+              AppState.trackingOptions1 = [];
+              AppState.trackingOptions2 = [];
+              this.updateTrackingCategoryDisplay();
+              this.updateTrackingOptionsList(1);
+              this.updateTrackingOptionsList(2);
+            }
+          }
+        },
+
+        // Add this new method to handle organization removal
+        removeOrganizationTrackingData(orgId) {
+          if (AppState.orgTrackingCategories[orgId]) {
+            // Remove tracking categories
+            if (AppState.orgTrackingCategories[orgId].category1) {
+              const catIndex = AppState.trackingCategory1.findIndex(
+                (cat) => cat.value === AppState.orgTrackingCategories[orgId].category1.value
+              );
+              if (catIndex !== -1) {
+                // Only remove if no other selected org has this category
+                const otherOrgHasCategory = AppState.selectedOrgs.some(
+                  (org) =>
+                    org.value !== orgId &&
+                    AppState.orgTrackingCategories[org.value]?.category1?.value ===
+                      AppState.orgTrackingCategories[orgId].category1.value
+                );
+
+                if (!otherOrgHasCategory) {
+                  AppState.trackingCategory1.splice(catIndex, 1);
+
+                  // Also remove any selected tracking options for this category
+                  AppState.selectedTrackingOptions1 = AppState.selectedTrackingOptions1.filter(
+                    (opt) => {
+                      // Keep options that don't belong to this org's category
+                      return !AppState.orgTrackingCategories[orgId].category1.options?.some(
+                        (catOpt) => catOpt.value === opt.value
+                      );
+                    }
+                  );
+                }
+              }
+            }
+
+            if (AppState.orgTrackingCategories[orgId].category2) {
+              const catIndex = AppState.trackingCategory2.findIndex(
+                (cat) => cat.value === AppState.orgTrackingCategories[orgId].category2.value
+              );
+              if (catIndex !== -1) {
+                // Only remove if no other selected org has this category
+                const otherOrgHasCategory = AppState.selectedOrgs.some(
+                  (org) =>
+                    org.value !== orgId &&
+                    AppState.orgTrackingCategories[org.value]?.category2?.value ===
+                      AppState.orgTrackingCategories[orgId].category2.value
+                );
+
+                if (!otherOrgHasCategory) {
+                  AppState.trackingCategory2.splice(catIndex, 1);
+
+                  // Also remove any selected tracking options for this category
+                  AppState.selectedTrackingOptions2 = AppState.selectedTrackingOptions2.filter(
+                    (opt) => {
+                      // Keep options that don't belong to this org's category
+                      return !AppState.orgTrackingCategories[orgId].category2.options?.some(
+                        (catOpt) => catOpt.value === opt.value
+                      );
+                    }
+                  );
+                }
+              }
+            }
+
+            // Delete the org's tracking data
+            delete AppState.orgTrackingCategories[orgId];
+          }
+        },
+
+        // Add method to initialize tracking category containers
+        initializeTrackingCategoryContainers() {
+          // Create container elements if they don't exist
+          const trackingCategory1Container =
+            document.getElementById("trackingCategory1Container") || document.createElement("div");
+          trackingCategory1Container.id = "trackingCategory1Container";
+          trackingCategory1Container.className = "tracking-category-container";
+
+          const trackingCategory2Container =
+            document.getElementById("trackingCategory2Container") || document.createElement("div");
+          trackingCategory2Container.id = "trackingCategory2Container";
+          trackingCategory2Container.className = "tracking-category-container";
+
+          // Add containers to the DOM
+          const trackingSection =
+            document.getElementById("trackingSection") ||
+            document.querySelector(".report-options-container");
+
+          if (trackingSection) {
+            // Add heading for clarity
+            const heading1 = document.createElement("h4");
+            heading1.textContent = "Tracking Category 1";
+            trackingSection.appendChild(heading1);
+            trackingSection.appendChild(trackingCategory1Container);
+
+            const heading2 = document.createElement("h4");
+            heading2.textContent = "Tracking Category 2";
+            trackingSection.appendChild(heading2);
+            trackingSection.appendChild(trackingCategory2Container);
+          }
+        },
+
+        filterOrganizations(searchTerm) {
+          const filtered = AppState.organizations.filter((org) =>
+            org.label.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          this.updateOrganizationsList(filtered);
+        },
+
+        toggleAllTrackingOptions(optionNumber) {
+          const reportType = DOM.createReportType.value;
+          let options, selectedOptions;
+
+          if (reportType === "profitAndLoss") {
+            // For Profit & Loss, use tracking categories
+            options = optionNumber === 1 ? AppState.trackingCategory1 : AppState.trackingCategory2;
+            selectedOptions =
+              optionNumber === 1
+                ? AppState.selectedTrackingOptions1
+                : AppState.selectedTrackingOptions2;
+          } else {
+            // For Balance Sheet and others, use tracking options
+            options = optionNumber === 1 ? AppState.trackingOptions1 : AppState.trackingOptions2;
+            selectedOptions =
+              optionNumber === 1
+                ? AppState.selectedTrackingOptions1
+                : AppState.selectedTrackingOptions2;
+          }
+
+          // Check if all are already selected
+          const allSelected = options.length === selectedOptions.length && options.length > 0;
+
+          if (allSelected) {
+            // Deselect all
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1 = [];
+            } else {
+              AppState.selectedTrackingOptions2 = [];
+            }
+          } else {
+            // Select all
+            if (optionNumber === 1) {
+              AppState.selectedTrackingOptions1 = [...options];
+            } else {
+              AppState.selectedTrackingOptions2 = [...options];
+            }
+          }
+
+          this.updateTrackingOptionsList(optionNumber);
+          this.updateTrackingOptionDisplay(optionNumber);
+        },
+
+        updateTrackingOptionsList(optionNumber) {
+          const reportType = DOM.createReportType.value;
+          const optionsContainer =
+            optionNumber === 1 ? DOM.trackingOption1Options : DOM.trackingOption2Options;
+          optionsContainer.innerHTML = "";
+
+          let allOptions;
+          if (reportType === "profitAndLoss") {
+            // For Profit & Loss, use tracking categories
+            allOptions =
+              optionNumber === 1 ? AppState.trackingCategory1 : AppState.trackingCategory2;
+          } else {
+            // For Balance Sheet and others, use tracking options
+            allOptions = optionNumber === 1 ? AppState.trackingOptions1 : AppState.trackingOptions2;
+          }
+
+          allOptions.forEach((opt) => {
+            const selectedOptions =
+              optionNumber === 1
+                ? AppState.selectedTrackingOptions1
+                : AppState.selectedTrackingOptions2;
+            const isSelected = selectedOptions.some((selected) => selected.value === opt.value);
+
+            const option = document.createElement("div");
+            option.className = `multiselect-option ${isSelected ? "selected" : ""}`;
+            option.onclick = (e) => {
+              e.stopPropagation();
+              this.toggleTrackingOption(optionNumber, opt);
+            };
+            option.innerHTML = `
+                  <img src="https://api.iconify.design/lucide:check.svg" alt="Check" width="16" height="16"
+                      style="opacity: ${isSelected ? "1" : "0"}">
+                  ${opt.label}
+                `;
+            optionsContainer.appendChild(option);
+          });
+
+          // Update Select All button state
+          const selectAllButton =
+            optionNumber === 1 ? DOM.trackingOption1SelectAll : DOM.trackingOption2SelectAll;
+          const selectAllImg = selectAllButton.querySelector("img");
+          const selectedOptions =
+            optionNumber === 1
+              ? AppState.selectedTrackingOptions1
+              : AppState.selectedTrackingOptions2;
+          selectAllImg.style.opacity =
+            allOptions.length === selectedOptions.length && allOptions.length > 0 ? "1" : "0";
+        },
+
+        filterTrackingOptions(optionNumber, searchTerm) {
+          const reportType = DOM.createReportType.value;
+          let allOptions;
+
+          if (reportType === "profitAndLoss") {
+            // Use tracking categories as options
+            allOptions =
+              optionNumber === 1 ? AppState.trackingCategory1 : AppState.trackingCategory2;
+          } else {
+            // Use regular tracking options
+            allOptions = optionNumber === 1 ? AppState.trackingOptions1 : AppState.trackingOptions2;
+          }
+
+          const filtered = allOptions.filter((opt) =>
+            opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+
+          const optionsContainer =
+            optionNumber === 1 ? DOM.trackingOption1Options : DOM.trackingOption2Options;
+          optionsContainer.innerHTML = "";
+
+          filtered.forEach((opt) => {
+            const selectedOptions =
+              optionNumber === 1
+                ? AppState.selectedTrackingOptions1
+                : AppState.selectedTrackingOptions2;
+            const isSelected = selectedOptions.some((selected) => selected.value === opt.value);
+
+            const option = document.createElement("div");
+            option.className = `multiselect-option ${isSelected ? "selected" : ""}`;
+            option.onclick = (e) => {
+              e.stopPropagation();
+              this.toggleTrackingOption(optionNumber, opt);
+            };
+            option.innerHTML = `
+                <img src="https://api.iconify.design/lucide:check.svg" alt="Check" width="16" height="16"
+                    style="opacity: ${isSelected ? "1" : "0"}">
+                ${opt.label}
+              `;
+            optionsContainer.appendChild(option);
+          });
+        },
+      };
+
+      // Initialize application
+      document.addEventListener("DOMContentLoaded", () => {
+        EventHandlers.init();
+        Utilities.updateReportOptions(DOM.createReportType.value);
+        Utilities.addLog("Application initialized and ready", "info");
+
+        Utilities.updateTabDisplay("organizations");
+      });
+    </script>
+  </body>
+</html>
