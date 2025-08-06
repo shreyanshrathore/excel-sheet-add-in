@@ -1,43 +1,60 @@
-🚀 Getting Started with the Excel Add-in
-Hey dev! 👋 Before you dive in, follow these quick steps to get things rolling:
+# 📊 Excel Add-on Development Setup
 
-🛠️ Setup Instructions
-Pull the latest dev branch:
+> **Quick Start Guide** - Get up and running in minutes!
 
-bash
-Copy
-Edit
+## 🚀 Prerequisites
+
+Before you begin, make sure you have:
+
+- ✅ **Node.js** installed on your system
+- ✅ **Excel desktop application** installed
+- ✅ **Git** for version control
+
+## 🛠️ Setup Instructions
+
+### 1. Pull the Development Branch
+
+```bash
 git checkout dev
 git pull origin dev
-Install dependencies:
+```
 
-bash
-Copy
-Edit
+### 2. Install Dependencies
+
+```bash
 npm install
-Start the local development server:
+```
 
-bash
-Copy
-Edit
+### 3. Start the Development Server
+
+```bash
 npm start
-Launch Excel Desktop App (automatically opens):
+```
 
-Once the dev server is up and running, the Excel Desktop app will open automatically if it's installed.
+### 4. Excel Integration 🎯
 
-✅ If Excel asks for permissions or shows any security prompt, please click “Yes” or “Trust” to continue.
+- If you have **Excel desktop app** installed, you should be **automatically redirected** to Excel
+- When Excel prompts you with any dialogs or permissions, please **click "Yes"** to allow the add-on to load
+- **YOHO!** 🎉 You're now in the Excel add-on environment and ready to roll!
 
-You're in! 🎉
+## 🧪 Testing
 
-You should now see your Excel Add-in loaded inside Excel. You can begin testing and making changes.
+Once you're in the Excel add-on, you can **continue testing**. The add-on should be loaded and ready to use within the Excel interface.
 
-🤖 Need Help?
-Make sure you have the Office Add-in development tools installed (e.g. Office Add-in CLI or sideloading enabled).
+## 🔧 Troubleshooting
 
-Excel Desktop App must be installed for automatic redirection.
+| Issue                            | Solution                                                         |
+| -------------------------------- | ---------------------------------------------------------------- |
+| Excel doesn't open automatically | Try opening Excel manually and look for the add-on in the ribbon |
+| Security prompts appear          | Make sure to **allow/click "Yes"** on all security prompts       |
+| General issues                   | Check the console for error messages                             |
 
-If you're testing on Excel Web, make sure your manifest and dev server are accessible over HTTPS (or use a tunneling tool like ngrok).
+---
 
-Happy Testing! 🧪✨
+## 🎊 Happy Testing!
 
-Let me know if you want a version with GIF/screenshots or .env guidance too!
+For any issues or questions, please check the development console or reach out to the development team.
+
+---
+
+_Made with ❤️ for seamless Excel add-on development_
