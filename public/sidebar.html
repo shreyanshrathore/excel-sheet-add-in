@@ -1242,15 +1242,13 @@
             throw new Error(`Initial fetch failed: ${initialData.message || "Unknown error"}`);
           }
 
-          if (!initialData.url) {
+          if (initialData.url) {
             const followupRes = await fetch(initialData.url, {
-              headers: {
-                Authorization: `Bearer ${params.token}`,
-              },
+              method: "GET",
             });
 
             const followupData = await followupRes.json();
-
+            console.log("followupData", followupData);
             if (!followupRes.ok) {
               throw new Error(`Follow-up fetch failed: ${followupData.message || "Unknown error"}`);
             }
@@ -1967,24 +1965,26 @@
             });
 
             // Extract the relevant data
-            const followUpResponse = await fetch(data.url, {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-
-            const reportData = data.reportType || data.data?.reportType;
+            // const followUpResponse = await fetch(data.url, {
+            //   method: "GET",
+            //   headers: {
+            //     Authorization: `Bearer ${token}`,
+            //   },
+            // });
+            console.log("followup response", data);
+            const reportData = data[reportType];
+            console.log("reportData", reportData, reportType);
             if (!reportData || reportData.length === 0) {
               //   sheet.getCell(0, 0).values = [[" No data found"]];
               //   sheet.getCell(0, 0).format.fill.color = "red";
               //   sheet.getCell(0, 0).format.font.color = "white";
               //   throw new Error("No data found in API response");
               console.log("reportdata is null");
-              messageDiv.textContent = "No data available.";
-              messageDiv.style.color = "red";
+              // messageDiv.textContent = "No data available.";
+              // messageDiv.style.color = "red";
               return Promise.reject(new Error("No data found in API response."));
             }
+            console.log("reportData", reportData);
             await Excel.run(async (context) => {
               const sheet = context.workbook.worksheets.getActiveWorksheet();
 
